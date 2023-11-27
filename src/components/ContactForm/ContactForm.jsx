@@ -1,44 +1,42 @@
 import css from './ContactForm.module.css';
 import { nanoid } from 'nanoid';
 import { useDispatch, useSelector } from 'react-redux';
-import { getContacts } from 'redux/contacts/contacts.selectors';
-import { addContact } from 'redux/contacts/contacts.reducer';
+import { selectContacts } from 'redux/contacts/selectors';
+import { addContact } from 'redux/contacts/operations';
 
 export const ContactForm = () => {
-    
-
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(selectContacts);
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
 
-        const newContact = {
-            id: nanoid(),
-            name: evt.target.elements.name.value,
-            number: evt.target.elements.number.value,
-        }
-    
-    const existingContact = contacts.find(contact => contact.name === newContact.name);
+    const newContact = {
+      id: nanoid(),
+      name: evt.target.elements.name.value,
+      number: evt.target.elements.number.value,
+    };
+
+    const existingContact = contacts.find(
+      contact => contact.name === newContact.name
+    );
     if (existingContact) {
       alert(`Contact ${newContact.name} already exists!`);
     } else {
       dispatch(addContact(newContact));
     }
-      
-      const form = evt.currentTarget;
-      form.reset();
-    }
 
-        return (
-          <div>
-        <form 
-        className={css.contactForm}
-        onSubmit={handleSubmit}>
-        <label
-        className={css.contactFormLabel}
-        htmlFor="name">Name</label>
-          <input
+    const form = evt.currentTarget;
+    form.reset();
+  };
+
+  return (
+    <div>
+      <form className={css.contactForm} onSubmit={handleSubmit}>
+        <label className={css.contactFormLabel} htmlFor="name">
+          Name
+        </label>
+        <input
           className={css.contactFormInput}
           type="text"
           name="name"
@@ -48,9 +46,9 @@ export const ContactForm = () => {
           }
           required
         />
-         <label
-        className={css.contactFormLabel}
-        htmlFor="number">Number</label>
+        <label className={css.contactFormLabel} htmlFor="number">
+          Number
+        </label>
         <input
           type="tel"
           name="number"
@@ -65,7 +63,6 @@ export const ContactForm = () => {
           Add contact
         </button>
       </form>
-         </div>   
-        )
-    }
-
+    </div>
+  );
+};
